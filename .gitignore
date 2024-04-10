@@ -1,0 +1,12 @@
+# ignore venv
+venv/
+
+# ignore _pycache_
+__pycache__/
+
+# AccidentReports.csv
+
+AccidentReports.csv
+
+# ignore tempCodeRunnerFile.py
+tempCodeRunnerFile.py
