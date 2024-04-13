@@ -22,23 +22,34 @@ dash.register_page(__name__, "/")
 df = pd.read_excel('testdata.xlsx')
 
 
+
+
+global filtered_df
+filtered_df = df.copy()
+
+
+
+
+
 sidebar = html.Div(
     [
         html.Div(
-    children=[
-        html.Img(src="/assets/dsdsdd.png", height=55, style={"width": "80%", "margin": "auto", "display": "block"})
-    ],
-    style={"display": "flex", "justify-content": "center", "align-items": "center"}
-),
+            children=[
+                html.Div(
+                    html.Img(src="/assets/dsdsdd.png", height=55, style={"width": "80%", "margin": "auto", "display": "block"})
+                )
+            ],
+            style={"display": "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center"}
+        ),
         html.Hr(),
-       
-        
-          
-      
-        
-    ],style = SIDEBAR_STYLE,
-  
+        html.Div(
+          html.Img(src="/assets/admin.png", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "12px"})
+        )
+    ],
+    style=SIDEBAR_STYLE,
 )
+
+
 
 sidebar2 = html.Div(
     [
@@ -51,8 +62,8 @@ sidebar2 = html.Div(
                         # Title and count for the first box
                         html.Div(
                             [
-                                html.Div("Total accidents", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
-                                html.Div(df['Latitude'].count(), style={"color": "orange","font-size": "50px"})
+                                html.Div("Total accidents", id="total-accidents-title", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
+                                html.Div(id="total-accidents-count", style={"color": "orange","font-size": "50px"})
                             ],
                             style={"background-color": "#1F2C56", "padding": "5px", "text-align": "center"}
                         )
@@ -66,7 +77,7 @@ sidebar2 = html.Div(
                         html.Div(
                             [
                                 html.Div("Total accidents", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
-                                html.Div(df['Latitude'].count(), style={"color": "orange","font-size": "50px"})
+                                html.Div(df['Latitude'].count(), id="total-accidents-all", style={"color": "orange","font-size": "50px"})
                             ],
                             style={"background-color": "#1F2C56", "padding": "5px", "text-align": "center"}
                         )
@@ -77,44 +88,10 @@ sidebar2 = html.Div(
             style={"display": "flex", "flex-direction": "row", "justify-content": "center", "align-items": "center"}
         ),
         # Second row
-        html.Div(
-            [
-                # First column
-                html.Div(
-                    [
-                        # Title and count for the third box
-                        html.Div(
-                            [
-                                html.Div("Total accidents", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
-                                html.Div(df['Latitude'].count(), style={"color": "orange","font-size": "50px"})
-                            ],
-                            style={"background-color": "#1F2C56", "padding": "5px", "text-align": "center"}
-                        )
-                    ],
-                    style={"flex": 1, "margin": "5px"}
-                ),
-                # Second column
-                html.Div(
-                    [
-                        # Title and count for the fourth box
-                        html.Div(
-                            [
-                                html.Div("Total accidents", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
-                                html.Div(df['Latitude'].count(), style={"color": "orange","font-size": "50px"})
-                            ],
-                            style={"background-color": "#1F2C56", "padding": "5px", "text-align": "center"}
-                        )
-                    ],
-                    style={"flex": 1, "margin": "5px"}
-                )
-            ],
-            style={"display": "flex", "flex-direction": "row", "justify-content": "center", "align-items": "center"}
-        )
+        
     ],
     style=SIDEBAR_STYLE2
 )
-
-
 
 
 
@@ -124,7 +101,8 @@ graphbar = html.Div(
         html.Div(
             children=[
                 dcc.Graph(
-                    figure=bar_graph(df),
+                    id='bar-graph',  # Set the ID of the graph component
+                    figure={},  # Initially empty figure
                     style={'width': '100%', 'height': '100%'}
                 )
             ],           
@@ -132,13 +110,15 @@ graphbar = html.Div(
         ),
     ],style=GRAPHBAR_STYLE,
 )
+
 graphbar1 = html.Div(
     [
         # Small div with graph
         html.Div(
             children=[
                 dcc.Graph(
-                    figure=donut_chart(df)
+                    id='donut-chart',
+                    figure={}
                 )
             ],           
             
@@ -151,7 +131,8 @@ graphbar2 = html.Div(
         html.Div(
             children=[
                 dcc.Graph(
-                    figure=line_graph(df)
+                    id='line-graph',
+                    figure={}
                 )
             ],            
             
@@ -163,20 +144,18 @@ graphbar2 = html.Div(
 
 
 
-
 layout = html.Div([
     Header.header(df),sidebar,sidebar2, graphbar,graphbar1,graphbar2, # Navbar at the top
     html.Div([              
-            html.Div([
-                dcc.Tabs(id="tabs-styled-with-inline", value='tab-1', children=[
-                    dcc.Tab(label='Based On Road Types', value='tab-1', style=style_tabs, selected_style=tab_selected_style),
-                    dcc.Tab(label='Based on Clusters', value='tab-2', style=style_tabs, selected_style=tab_selected_style),
-                    dcc.Tab(label='Predicted Spots', value='tab-3', style=style_tabs, selected_style=tab_selected_style),
+              html.Div([
+                  dcc.Tabs(id="tabs-styled-with-inline", value='tab-1', children=[
+                      dcc.Tab(label='Based On Road Types', value='tab-1', style=style_tabs, selected_style=tab_selected_style),
+                      dcc.Tab(label='Based on Clusters', value='tab-2', style=style_tabs, selected_style=tab_selected_style),
+                      dcc.Tab(label='Predicted Spots', value='tab-3', style=style_tabs, selected_style=tab_selected_style),
 
-
-                ], style=CONTENT_STYLE),
-                html.Div(id="tabs-content-inline")     
-            ])
+                  ], style=CONTENT_STYLE),
+                  html.Div(id="tabs-content-inline")     
+              ])
     ])
 ],style={'backgroundColor': '#192444' ,'height':'100vh'})
 # style={'backgroundColor': '#192444'})

@@ -1,4 +1,8 @@
-from dash import dcc, html
+from dash import dcc, html, Input, Output
+from flask import app
+
+from map_road_type import map_road_type
+
 
 def header(df):
     # Generate district dropdown options
@@ -16,7 +20,6 @@ def header(df):
     # Define the header component layout
     return html.Div([
         html.Div([
-            
             html.H3("Karnataka State Police Accident Data Analysis", style={'display': 'inline-block', 'margin-left': 100, 'color': 'white'})
         ], style={'display': 'flex', 'align-items': 'center'}),  # Align logo and text to the left
 
@@ -25,7 +28,7 @@ def header(df):
                 id='district-dropdown',
                 options=district_options,
                 value='Select District',
-                multi=True,
+                multi=False,  # Changed to False since we're only selecting one district
                 clearable=False,
                 style={'width': '200px', 'margin-right': '10px'}
             ),
