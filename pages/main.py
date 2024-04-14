@@ -111,7 +111,7 @@ sidebar2 = html.Div(
                         # Title and count for the second box
                         html.Div(
                             [
-                                html.Div("Total accidents", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
+                                html.Div("Total accidents in Karnataka", style={"color": "white", "font-weight": "bold","font-size": "20px"}),
                                 html.Div(df['Latitude'].count(), id="total-accidents-all", style={"color": "orange","font-size": "50px"})
                             ],
                             style={"background-color": "#1F2C56", "padding": "5px", "text-align": "center"}
