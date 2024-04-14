@@ -84,18 +84,18 @@ To deploy this project run
 
 
 ## Main Dashboard All District
-<img src="Screentshot/Main_Dashboard_All_District.png>
+<img src="Screenshot/Main_Dashboard_All_District.png">
 
 
 ## Main Dashboard District = Ballakot Year=2019
-<img src="Screentshot/Main_Dashboard_Ballakot_2019.png>
+<img src="Screenshot/Main_Dashboard_Ballakot_2019.png">
 
 ## Main DashBoard Cluster Based Map
-<img src="Screentshot/Main_DashBoard_Cluster_Based.png>
+<img src="Screenshot/Main_DashBoard_Cluster_Based.png">
 
 
 
 ## Pridiction Accident Areas
-<img src="Screentshot/Pridiction_Accident_Area.png>
+<img src="Screenshot/Pridiction_Accident_Area.png">
 
 
