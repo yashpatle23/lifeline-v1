@@ -80,14 +80,17 @@ def update_graphs(selected_district, selected_year):
 def render_content(tab, selected_district,selected_year):
     df = filter_dataframe(selected_district, selected_year)
     if tab == 'tab-1':
-            # Render content for tab 1 with selected district
-            return html.Div([
-                html.Iframe(srcDoc=map_road_type(df).get_root().render(), style={'width': '67.87%', 'height': '410px'})
-            ], style={'textAlign': 'right'})
+    # Render content for tab 1 with selected district
+        return html.Div([
+        dcc.Graph(
+            figure=map_road_type(df),
+            style={'width': '67.87%', 'height': '410px','margin-left': 'auto', 'margin-right': '0'}
+        )
+        ], style={'textAlign': 'right'})
     elif tab == 'tab-2':
         # Render content for tab 2
-         return html.Div([
-                html.Iframe(srcDoc=create_cluster_map(df).get_root().render(), style={'width': '67.87%', 'height': '410px'})
+        return html.Div([
+                html.Iframe(srcDoc=create_cluster_map(selected_district,df).get_root().render(), style={'width': '67.87%', 'height': '410px'})
             ], style={'textAlign': 'right'})
     elif tab == 'tab-3':
         # Render content for tab 3
@@ -97,6 +100,26 @@ def render_content(tab, selected_district,selected_year):
     else:
         return html.Div([])
     
+
+
+#VINAY    
+@app.callback(
+    Output('table-container', 'children'),
+    Input('junction-dropdown', 'value'),
+    Input('severity-dropdown', 'value'),
+)
+def update_table(junction_value, severity_value):
+    filtered_df = df[(df['Accident_Spot'] == junction_value) & (df['Severity'] == severity_value)]
+    print(filtered_df)
+    # Create HTML table
+    table = html.Table(
+        # Table header
+        [html.Tr([html.Th(col) for col in ['Collision_Type', 'Junction_Control', 'Road_Character', 'Road_Type']])] +
+        # Table body
+        [html.Tr([html.Td(filtered_df.iloc[i][col]) for col in ['Collision_Type', 'Junction_Control', 'Road_Character', 'Road_Type']]) for i in range(min(len(filtered_df), 10))]  # Show up to 10 rows
+    )
+    
+    return table
 
 # Main function
 if __name__ == '__main__':

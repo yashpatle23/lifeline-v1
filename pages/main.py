@@ -30,24 +30,59 @@ filtered_df = df.copy()
 
 
 
-
 sidebar = html.Div(
     [
         html.Div(
             children=[
                 html.Div(
-                    html.Img(src="/assets/dsdsdd.png", height=55, style={"width": "80%", "margin": "auto", "display": "block"})
+                    html.Img(src="/assets/dsdsdd.png", height=55, style={"width": "80%", "display": "block"})
                 )
             ],
-            style={"display": "flex", "flex-direction": "column", "justify-content": "center", "align-items": "center"}
+            style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
         ),
-        html.Hr(),
         html.Div(
-          html.Img(src="/assets/admin.png", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "12px"})
+            children=[
+                html.A(
+                    html.Img(src="/assets/pridict.png", height=45, style={"width": "60%",  "display": "block", "position": "absolute", "bottom": "180px"}),
+                    href="http://127.0.0.1:8050/pridict",  # Set the href attribute to the desired URL
+                )
+            ],
+            style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
+        ),
+        html.Div(
+            children=[
+                html.A(
+                    html.Img(src="/assets/dashboard.png", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "100px" }),
+                    href="https://lookerstudio.google.com/s/pdbCPDa2Hmg",  # Set the href attribute to the desired URL
+                )
+            ],
+            style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
+        ),
+        html.Div(
+            children=[
+                html.A(
+                    # Set the href attribute to the desired URL
+                    html.Img(src="/assets/upload.jpg", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "20px"}),
+                    href="http://127.0.0.1:8050/form", 
+                )
+            ],
+            style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
+        ),
+        html.Div(
+            children=[
+                html.A(
+                    # Set the href attribute to the desired URL
+                    html.Img(src="/assets/admin.png", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "260px"}),
+                    href="http://127.0.0.1:8050/", 
+                )
+            ],
+            style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
         )
     ],
     style=SIDEBAR_STYLE,
 )
+
+
 
 
 

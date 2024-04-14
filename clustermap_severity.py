@@ -1,52 +1,42 @@
-import pandas as pd
+import geopandas as gpd
 import folium
 from folium.plugins import MarkerCluster
-import json
+def create_cluster_map(district_name, df):
+  # Load GeoJSON file with district borders of Karnataka
+  geojson_file_path = 'District_Map.geojson'
+  districts = gpd.read_file(geojson_file_path)
 
-def create_cluster_map(df):
-    # Create a Folium Map centered at the mean latitude and longitude of the DataFrame
-    m = folium.Map(location=[15.05, 76.8], zoom_start=7)
+  # Create a map centered at Karnataka
+  map_karnataka = folium.Map(location=[df['Latitude'].mean(), df['Longitude'].mean()], zoom_start=7)
 
-    # Create a MarkerCluster object
-    marker_cluster = MarkerCluster().add_to(m)
+  # Create a MarkerCluster layer
+  marker_cluster = MarkerCluster().add_to(map_karnataka)
 
-    # Iterate through each row in the DataFrame and add markers with popups
+  # Find district polygon based on district name
+  district_polygon = districts[districts['name'] == district_name]
+
+  # Check if the district polygon exists
+  if not district_polygon.empty:
+    # Add district borders to the map
+    folium.GeoJson(district_polygon.to_json()).add_to(map_karnataka)
+
+    # Iterate over each row in the dataframe and add markers to the MarkerCluster
     for index, row in df.iterrows():
-        # Extract Severity, Latitude, and Longitude from the row
-        severity = row['Severity']
-        latitude = row['Latitude']
-        longitude = row['Longitude']
+      # Extract latitude and longitude
+      latitude = row['Latitude']
+      longitude = row['Longitude']
 
-        popup_text = f"Severity: {severity}"
+      # Create a GeoJSON representation of the point
+      point_geojson = {
+          "type": "Feature",
+          "geometry": {
+              "type": "Point",
+              "coordinates": [longitude, latitude]
+          }
+      }
 
-        # Add marker with popup to MarkerCluster
-        folium.Marker(location=[latitude, longitude], popup=popup_text).add_to(marker_cluster)
+      # Add the point to the MarkerCluster layer
+      folium.GeoJson(point_geojson).add_to(marker_cluster)
 
-    # Add District Borders
-        districts_geojson = 'District_Map.geojson'
-    # Load the GeoJSON data
-    with open(districts_geojson) as f:
-        data = json.load(f)
-
-    # Extract the features (districts)
-    features = data['features']
-
-    # Loop through each district and create a separate layer
-    for feature in features:
-        district_name = feature['properties']['name']
-        district_geometry = feature['geometry']
-
-        # Create a new Folium GeoJson layer for the current district
-        district_layer = folium.GeoJson(district_geometry, name=district_name)
-
-        # Add the district layer to the map
-        m.add_child(district_layer)
-
-    # Add LayerControl to toggle visibility of different layers
-    folium.LayerControl().add_to(m)
-
-    return m
-
-# Example usage:
-# cluster_map = create_cluster_map(df, '/content/drive/MyDrive/Colab Notebooks/coordinate/District_Map.geojson')
-# cluster_map.save('/content/drive/MyDrive/Colab Notebooks/ClusterMap-Severity.html')
+  # Save or display the map
+  return map_karnataka

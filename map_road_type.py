@@ -1,8 +1,12 @@
-import folium
+import plotly.graph_objs as go
 
 def map_road_type(df):
-    # Create a Folium map
-    m = folium.Map(location=[15.05, 76.8], zoom_start=8, tiles='CartoDB Dark_Matter', attr='Map')
+    # Calculate the mean latitude and longitude of the selected district
+    mean_latitude = df['Latitude'].mean()
+    mean_longitude = df['Longitude'].mean()
+
+    # Define the access token for Mapbox
+    mapbox_access_token = 'pk.eyJ1IjoicXM2MjcyNTI3IiwiYSI6ImNraGRuYTF1azAxZmIycWs0cDB1NmY1ZjYifQ.I1VJ3KjeM-S613FLv3mtkw'
 
     # Define a colormap based on severity
     severity_colormap = {
@@ -12,43 +16,31 @@ def map_road_type(df):
         'Damage Only': 'green'
     }
 
-    # Create LayerGroups for different road types
-    road_type_layers = {road_type: folium.FeatureGroup(name=road_type) for road_type in df['Road_Type'].unique()}
+    # Create data for Scattermapbox trace
+    trace = go.Scattermapbox(
+        lat=df['Latitude'],
+        lon=df['Longitude'],
+        mode='markers',
+        marker=dict(
+            size=5,  # Adjust the size of the markers
+            color=[severity_colormap.get(severity, 'gray') for severity in df['Severity']],  # Set marker color based on severity
+            opacity=0.8
+        ),
+        text=[f"Latitude: {lat}, Longitude: {lon}, Severity: {severity}" for lat, lon, severity in zip(df['Latitude'], df['Longitude'], df['Severity'])],  # Define text for hover tooltip
+    )
 
-    # Default LayerGroup for unrecognized road types
-    default_layer_group = folium.FeatureGroup(name='Others')
+    # Define layout for the scatter plot
+    layout = go.Layout(
+        mapbox=dict(
+            accesstoken=mapbox_access_token,
+            center=dict(lat=mean_latitude, lon=mean_longitude),  # Set center location based on mean latitude and longitude
+            zoom=8,  # Set initial zoom level
+            style='dark'  # Set Mapbox style
+        ),
+        margin=dict(r=0, l=0, t=0, b=0),  # Set margin to remove unnecessary padding
+    )
 
-    # Iterate over the data and add CircleMarkers to the corresponding LayerGroup
-    for index, row in df.iterrows():
-        road_type = row['Road_Type']
-        severity = row['Severity']
-        latitude = row['Latitude']
-        longitude = row['Longitude']
-        popup_content = f"Latitude: {latitude}, Longitude: {longitude}, Severity: {severity}"  # Popup content with severity
-        color = severity_colormap.get(severity, 'gray')  # Default to gray for unknown severity
-        circle_marker = folium.CircleMarker(
-            location=[latitude, longitude],
-            radius=2,  # Adjust the radius of the circle markers
-            color=color,
-            fill=True,
-            fill_opacity=0.8,
-            tooltip=popup_content  # Set tooltip to display popup content
-        )
-        # Add the circle marker to the corresponding LayerGroup or default LayerGroup
-        layer_group = road_type_layers.get(road_type)
-        if layer_group:
-            layer_group.add_child(circle_marker)
-        else:
-            default_layer_group.add_child(circle_marker)
+    # Create the figure
+    fig = go.Figure(data=[trace], layout=layout)
 
-    # Add each LayerGroup to the map
-    for layer_group in road_type_layers.values():
-        layer_group.add_to(m)
-
-    # Add default LayerGroup to the map
-    default_layer_group.add_to(m)
-
-    # Add LayerControl to toggle visibility of different road types
-    folium.LayerControl(collapsed=False).add_to(m)
-
-    return m
+    return fig
