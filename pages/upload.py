@@ -1,3 +1,5 @@
+from pydoc import doc
+from dash import dcc
 import dash
 from dash import html
 from components import Header
@@ -82,7 +84,7 @@ sidebar = html.Div(
                 html.A(
                     # Set the href attribute to the desired URL
                     html.Img(src="/assets/upload.jpg", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "20px"}),
-                    href="http://127.0.0.1:8050/form", 
+                    href="http://127.0.0.1:8050/upload", 
                 )
             ],
             style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
@@ -106,15 +108,36 @@ sidebar = html.Div(
 
 
 
-dash.register_page(__name__, path='/form')
+dash.register_page(__name__, path='/upload')
 df = pd.read_excel('testdata.xlsx')
 
 # prompt: function to give a dataframe which has the district give in passing variable 
 
 
 layout = html.Div([
-    Header.header(df),sidebar
-],style={'backgroundColor': '#192444' ,'height':'100vh'})
+    Header.header(df),sidebar,
+    dcc.Upload(
+    id='upload-data',
+    children=html.Div(['Drop or ', html.A('Select Files')]),
+    style={
+        'width': '200px',
+        'height': '50px',
+        'lineHeight': '50px',
+        'borderWidth': '1px',
+        'borderStyle': 'dashed',
+        'borderRadius': '5px',
+        'textAlign': 'center',
+        'margin': 'auto',  # Aligning to the center horizontally
+        'color': 'black',  # Text color
+        'backgroundColor': '#6495ED',  # Blue background color
+        'display': 'block',  # Ensure it's a block element for margin auto to work
+        'marginTop': '50vh',  # Aligning to the center vertically
+        'transform': 'translateY(-50%)',  # Centering vertically
+    },
+    # Allow multiple files to be uploaded
+    multiple=False
+),
+])
 # style={'backgroundColor': '#192444'})\
 
 # layout =  html.Div(

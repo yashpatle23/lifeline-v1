@@ -63,7 +63,7 @@ sidebar = html.Div(
                 html.A(
                     # Set the href attribute to the desired URL
                     html.Img(src="/assets/upload.jpg", height=45, style={"width": "60%", "margin": "auto", "display": "block", "position": "absolute", "bottom": "20px"}),
-                    href="http://127.0.0.1:8050/form", 
+                    href="http://127.0.0.1:8050/upload", 
                 )
             ],
             style={"display": "flex", "flex-direction": "column", "justify-content": "flex-end", "align-items": "center"}
