@@ -82,16 +82,17 @@ severity_options = [
 
 # Create the Dash app
 app = dash.Dash(__name__)
+
 layout = html.Div([
     Header.header(df),
     sidebar,
    
     
     html.Div([
-        html.Div([
-            
-            create_table(df,None),  # Include the DataTable here
-        ], style={'overflowX': 'auto', 'overflowY': 'auto', 'height': '50%', 'width': '25%', 'margin-top': '10px','margin-left': '40px'}),
+       html.Div([
+        html.Img(src='/assets/FeatureImportance.png', style={'width': '100%', 'height': '500px'}),
+        html.Div(create_table(df, None), style={'overflowX': 'auto', 'overflowY': 'auto'}),  # Include the DataTable here
+    ], style={'display': 'flex', 'flexDirection': 'column', 'height': '100%', 'width': '25%', 'margin-top': '10px','margin-left': '40px'}),
         dcc.Graph(
             id='scatterplot-map',
             figure=create_Scatterplot_map(df),
@@ -99,8 +100,7 @@ layout = html.Div([
         ),
     ], style={'margin-top': '5px', 'height': 'calc(85vh - 43px)', 'width': '100%', 'display': 'flex', 'position': 'relative', 'z-index': '0','margin-left': '20px'}),
 
-], style={'backgroundColor': '#192444', 'height': '100vh','width': '100%','overflowX': 'hidden','margin-left': '15px'})
-
+], style={'backgroundColor': '#192444', 'height': '100vh','width': '100%','overflowX': 'hidden','margin-left': '15px'}),
 # Define callback to update table content
 @app.callback(
     Output('table-container', 'children'),
@@ -110,8 +110,7 @@ layout = html.Div([
 def update_table(junction_value, severity_value):
     # Filter DataFrame based on selected options
     filtered_df = df[(df['Junction_Control'] == junction_value) & (df['Severity'] == severity_value)]
-    return create_table(filtered_df)
-
+    return create_table(filtered_df),
 
 # Run the app
 if __name__ == '__main__':
