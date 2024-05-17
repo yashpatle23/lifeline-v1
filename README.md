@@ -49,7 +49,7 @@ Vaidhehi Thool
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 ## Installation 
-To install the requirements of project python should be installed 
+To install the requirements of project python should be installed  optional 3.11.9
 
 ## Optional
 You can use the venv or u can either run it in the console 
