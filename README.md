@@ -55,7 +55,7 @@ To install the requirements of project python should be installed
 You can use the venv or u can either run it in the console 
 
 ```bash
-   python -m venv .venv
+   python -m venv venv
    venv/Scripts/activate
 ```
 ## Dependances
