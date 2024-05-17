@@ -49,7 +49,7 @@ Vaidhehi Thool
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 ## Installation 
-To install the requirements of project python should be installed and version  3.6.8 
+To install the requirements of project python should be installed 
 
 ## Optional
 You can use the venv or u can either run it in the console 
